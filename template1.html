@@ -38,7 +38,15 @@
             <p id="error" class="error"></p>
           </div>
           <div class="func-inputs">
-            <textarea placeholder="" name="" id="" cols="20" rows="10"></textarea>
+            <div>
+              <input type="text" name="" id="company-name-input" placeholder="company name">
+              <input type="text" name="" id="job-name-input" placeholder="job name">
+              <input type="text" placeholder="start job date" name="start-job-date-input" id="start-job-date-input" onfocus="(this.type='date')">
+              <input type="text" placeholder="end job date" name="end-job-date-input" id="end-job-date-input" onfocus="(this.type='date')">
+              <button id="btn-add-experience">add Experience</button>
+            </div>
+            <div id="experiences-inputs">
+            </div>
           </div>
         </div>
     </div>
@@ -80,7 +88,7 @@
               <div class="func">
                 <div class="work">
                   <h3><i class="fa fa-briefcase"></i>Experience</h3>
-                  <ul>
+                  <ul id="experiences">
                     <li><span>Technical Consultant -<br>Web Design</span><small>Fiserv</small><small>Apr 2018 - Now</small></li>
                     <li><span>Web Designer</span><small>Lynden</small><small>Jan 2018 - Apr 2018</small></li>
                     <li><span>Intern - Web Design</span><small>Lynden</small><small>Aug 2017 - Dec 2017</small></li>

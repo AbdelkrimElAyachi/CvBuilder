@@ -1,16 +1,16 @@
 const cv = document.getElementById("cv");
 
 const errorEle = document.getElementById("error");
-// displaying errors
+// displaying errors **********************************************************************
 function clearError(){
     errorEle.innerHTML = "";
 }
 function setError(error){
     errorEle.innerHTML = error;
-    setTimeout(clearError, 2000);
+    setTimeout(clearError, 3000);
 }
 
-// handle image
+// handle image ***************************************************************************
 const imageInput = document.getElementById("image-input");
 const image = document.getElementById("image");
 
@@ -27,7 +27,7 @@ imageInput.addEventListener('change',(event)=>{
     }
 })
 
-// handle name and job 
+// handle name and job *********************************************************************
 const nameInput = document.getElementById("name-input");
 const jobInput = document.getElementById("job-input");
 
@@ -41,7 +41,7 @@ jobInput.onchange = (e)=>{
     job.innerText = e.target.value;
 }
 
-// handle about element
+// handle about element **********************************************************************
 const aboutInput = document.getElementById("about-input");
 const about = document.getElementById("about")
 
@@ -49,7 +49,7 @@ aboutInput.onchange = (e)=>{
     about.innerText = e.target.value;
 }
 
-// handle contact elemenets
+// handle contact elemenets ******************************************************************
 const phoneInput = document.getElementById("phone-input");
 const phone = document.getElementById("phone");
 const addressInput = document.getElementById("address-input");
@@ -70,7 +70,7 @@ emailInput.onchange = (e)=>{
 }
 
 
-// handle social media
+// handle social media ************************************************************************
 const div_social_media = document.getElementById("social-media-links");
 const div_social_media_inputs = document.getElementById("links-social-media-inputs");
 const socialMedias = {
@@ -86,13 +86,12 @@ const socialMedias = {
 
 let links = [] ;
 
-function checkErrors(link,socialMedia){
+function checkErrorsSocialMedia(link,socialMedia){
     let res = true;
     links.forEach((lk,ind)=>{
-        console.log(lk.link,link);
         if(lk.link==link){
             setError("this link already exist");
-            res= false;
+            res = false;
         }
         if(lk.name==socialMedia){
             setError("you already added this social media");
@@ -104,12 +103,7 @@ function checkErrors(link,socialMedia){
 // get button element with attribut data that has the ind of the link that we need to delete
 function deleteLink(e){
     const index = e.target.getAttribute('data-info');
-    links = links.filter((link,ind)=>{
-        if(index==ind){
-            return false;
-        }
-        return true;
-    })
+    links.splice(parseInt(index),1);
     renderLinks();
 }
 // render the links 
@@ -133,19 +127,81 @@ function addLink(){
     let social_media_link = document.getElementById("link-input").value;
     let social_media_name = document.getElementById("social-media-name-input").value;
 
-    let res = checkErrors(social_media_link,social_media_name);
-
-    if (res){
-        links.push( { link:social_media_link, name:social_media_name, icon:socialMedias[social_media_name]});
-        renderLinks();
-    }
+    let res = checkErrorsSocialMedia(social_media_link,social_media_name);
     document.getElementById("link-input").value = "";
+    
+    if (!res) return false;
+    links.push( { link:social_media_link, name:social_media_name, icon:socialMedias[social_media_name]});
+    renderLinks();
     
 }
 // listening on click for add button
 document.getElementById("btn-add-social-media").addEventListener("click",addLink);
 
-// handle the download
+
+// hanlde experience ***********************************************************************************
+const experiences = [];
+
+const company_name_input = document.getElementById("company-name-input");
+const job_name_input = document.getElementById("job-name-input");
+const job_start_date_input = document.getElementById("start-job-date-input");
+const job_end_date_input = document.getElementById("end-job-date-input");
+
+const experiences_inputs = document.getElementById("experiences-inputs")
+
+const experiencesEle = document.getElementById("experiences");
+
+document.getElementById("btn-add-experience").addEventListener("click",addExperience);
+
+function addExperience(){
+    let company_name = company_name_input.value;
+    let job_name = job_name_input.value;
+    let start_date = job_start_date_input.value;
+    let end_date = job_end_date_input.value;
+
+    company_name_input.innerHTML = "";
+    job_name_input.innerHTML = "";
+    job_start_date_input.innerHTML = "";
+    job_end_date_input.innerHTML = "";
+    
+    let res = checkErrorsExperience(company_name,job_name,start_date,end_date);
+    if(!res) return false;
+
+    experiences.push({company_name:company_name,job_name:job_name,start_date:start_date,end_date:end_date});
+    renderExperiences();
+
+}
+function deleteExperience(e){
+    const index = e.target.getAttribute('data-info');
+    experiences.splice(parseInt(index),1);
+    renderExperiences();
+}
+
+function checkErrorsExperience(start_date,end_date){
+    let res = true;
+    if(new Date(start_date) > new Date(end_date)){
+        setError("the start date of experience cannot be bigger than the end date");
+        res = false; 
+    }
+    return res;
+}
+
+function renderExperiences(){
+    experiencesEle.innerHTML = "";
+    experiences_inputs.innerHTML = "";
+
+    experiences.forEach((experience,ind)=>{
+        const btn = document.createElement("button");
+        btn.innerText = "delete";
+        btn.setAttribute("data-info",ind);
+        btn.addEventListener('click',deleteExperience);
+        experiences_inputs.innerHTML += `<div >job : ${experience.job_name} </div>`;
+        experiences_inputs.querySelector('div:last-child').append(btn);
+        experiencesEle.innerHTML += `<li><span>${experience.job_name}</span><small>${experience.company_name}</small><small>${experience.start_date} - ${experience.end_date}</small></li>`
+    })
+}
+
+// handle the download *********************************************************************************
 document.getElementById("btn-download").addEventListener("click", async ()=>{
     window.print();
 });
